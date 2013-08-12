@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>DaveSite - {% block title %}{% endblock title %}</title>
+
+		<!-- Standard CSS/JS includes -->
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+		<!-- Template headers-->
+		{% block head %}
+		{% endblock head %}
+
+		<!--Drop Down Menu boilerplate: http://www.dynamicdrive.com/style/csslibrary/item/jquery_multi_level_css_menu_horizontal_blue/# -->
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='menu/jquerycssmenu.css') }}" />
+		
+		<!--[if lte IE 7]>
+		<style type="text/css">
+		html .jquerycssmenu{height: 1%;} /*Holly Hack for IE7 and below*/
+		</style>
+		<![endif]-->
+		<script type="text/javascript" src="{{ url_for('static', filename='menu/jquerycssmenu.js') }}"></script>
+		<script type="text/javascript">
+			var arrowimages={down:['downarrowclass', '/static/menu/arrow-down.gif', 25], right:['rightarrowclass', '/static/menu/arrow-down.gif']}
+			jquerycssmenu.buildmenu("navmenu", arrowimages)
+		</script>
+
+	
+
+	</head>
+	<body>
+		<div class="header">
+			<h1>DaveSite</h1>
+
+			<div id="navmenu" class="jquerycssmenu">
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="#">Projects</a>
+					  <ul>
+						  <li><a href="#">Coming Soon</a></li>
+					  </ul>
+					</li>
+					<li><a href="#">Related Sites</a>
+					  <ul>
+						  <li><a href="https://trac.davemarsh.webfactional.com">Trac</a></li>
+						  <li><a href="https://svn.davemarsh.webfactional.com">SVN</a></li>
+					  </ul>
+					</li>	
+				</ul>
+				<br style="clear: left" />
+			</div>
+
+
+
+		</div>
+	
+		<div class="content">
+			{% block body %}
+			
+			{% endblock body %}
+		</div>
+	
+	
+		<div class="footer">
+			<hr />
+			<span class="content">Copyright David Marsh 2013</span>
+		</div>	
+	</body>
+</html>
+
