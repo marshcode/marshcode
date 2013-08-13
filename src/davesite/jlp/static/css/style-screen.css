@@ -1,0 +1,24 @@
+div#picard {
+	text-align:center;
+}
+
+div#picard > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;	
+}
+
+div#about{
+	text-align:center;	
+	font-size:0.9em;
+}
+div#about > table{
+    margin-left: auto;
+    margin-right: auto;	
+}
+
+table, th, td{
+	border: solid thin black;
+	border-collapse:collapse;	
+	font-size:1em;
+}
