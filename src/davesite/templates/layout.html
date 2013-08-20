@@ -4,26 +4,14 @@
 	<head>
 		<title>DaveSite - {% block title %}{% endblock title %}</title>
 
-		<!-- Standard CSS/JS includes -->
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<!-- Standard CSS includes -->
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
+
 		<!-- Template headers-->
 		{% block head %}
 		{% endblock head %}
 
-		<!--Drop Down Menu boilerplate: http://www.dynamicdrive.com/style/csslibrary/item/jquery_multi_level_css_menu_horizontal_blue/# -->
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='menu/jquerycssmenu.css') }}" />
-		
-		<!--[if lte IE 7]>
-		<style type="text/css">
-		html .jquerycssmenu{height: 1%;} /*Holly Hack for IE7 and below*/
-		</style>
-		<![endif]-->
-		<script type="text/javascript" src="{{ url_for('static', filename='menu/jquerycssmenu.js') }}"></script>
-		<script type="text/javascript">
-			var arrowimages={down:['downarrowclass', '/static/menu/arrow-down.gif', 25], right:['rightarrowclass', '/static/menu/arrow-down.gif']}
-			jquerycssmenu.buildmenu("navmenu", arrowimages)
-		</script>
+
 
 	
 
@@ -32,26 +20,25 @@
 		<div class="header">
 			<h1>DaveSite</h1>
 
-			<div id="navmenu" class="jquerycssmenu">
-				<ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="#">Projects</a>
-					  <ul>
-						  <li><a href="{{ url_for('jlp.index') }}">Jean-Luc Picard Advisor</a></li>
-					  </ul>
-					</li>
-					<li><a href="#">Related Sites</a>
-					  <ul>
+
+			  <ul class="nav nav-tabs">
+			    <li><a href="/">Home</a></li>
+			    <li class="dropdown">
+			      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects<b class="caret"></b></a>
+			      <ul class="dropdown-menu">
+					<li><a href="{{ url_for('jlp.index') }}">Jean-Luc Picard Advisor</a></li>
+			      </ul>
+			    </li>
+			    <li class="dropdown">
+			      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Related Sites<b class="caret bottom-up"></b></a>
+			      <ul class="dropdown-menu bottom-up pull-right">
 						  <li><a href="https://trac.davemarsh.webfactional.com">Trac</a></li>
 						  <li><a href="https://svn.davemarsh.webfactional.com">SVN</a></li>
-					  </ul>
-					</li>	
-				</ul>
-				<br style="clear: left" />
-			</div>
-
-
-
+			      </ul>
+			    </li>
+			  </ul>
+			</li>
+			</ul>
 		</div>
 	
 		<div class="content">
@@ -65,6 +52,11 @@
 			<hr />
 			<span class="content">Copyright David Marsh 2013</span>
 		</div>	
+		
+		<!-- JS Includes at the bottom of the body (like a good little web developer) -->
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.min.js') }}"></script>
+		
 	</body>
 </html>
 
