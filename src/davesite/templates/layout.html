@@ -2,6 +2,8 @@
 <html>
 
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
 		<title>DaveSite - {% block title %}{% endblock title %}</title>
 
 		<!-- Standard CSS includes -->
@@ -11,7 +13,11 @@
 		{% block head %}
 		{% endblock head %}
 
-
+		<style type="text/css">
+			body{
+				padding:0 1em;
+			}
+		</style>
 
 	
 
@@ -50,7 +56,7 @@
 	
 		<div class="footer">
 			<hr />
-			<span class="content">Copyright David Marsh 2013</span>
+			<span class="content">&copy; David Marsh 2013</span>
 		</div>	
 		
 		<!-- JS Includes at the bottom of the body (like a good little web developer) -->

@@ -2,44 +2,59 @@
 {% block title %}Jean-Luc PicardAdvisor{% endblock title %}
 
 {% block head %}
-	<link rel="stylesheet" media="all" href="{{ url_for('jlp.static', filename='css/style-screen.css') }}" type="text/css" />
 	<!--<link rel="icon" href="images/picard-favicon.png" sizes="32x32"> -->
 	<script type="text/javascript" src='{{ url_for('jlp.static', filename='js/script.js') }}'> </script>
+	
+	<style type="text/css">
+	
+		.row.padded{
+			padding-bottom:10px;
+		}
+	
+	</style>
+	
 {% endblock head %}
 
 {% block body %}
 
- 	<div id='picard'>
- 		<img src="{{ url_for('jlp.static', filename='images/picard.png') }}" />
- 		<input type="button" value="Talk to Me" onClick="randomPlay('{{ url_for('jlp.static', filename='audio/') }}', sounds)"/>
- 	</div>
- 	 	
- 	
- 	
- 	<div id='about'>
- 		Having trouble making decisions?  Can't make up your mind on what to do?  Ask the Jean Luc Picard advisor.  It's sort of like the Magic Eight Ball you would ask questions to as a kid.  But be forewarned, even though Jean Luc has had years of Academy training in decision analysis he is sometimes prone to stern, sarcastic replies.  He might even just ignore you and change the subject.
- 		
- 		<table>
- 			<thead>
- 				<tr>
-	 				<th>Author</th>
-	 				<th>Comment</th>
-	 				<th>Revision</th>
-	 			</tr>
- 			</thead>
- 			<tbody>
- 				<tr>
- 					<td>Don Rudnickas</td>
- 					<td><a href="{{ url_for('jlp.static', filename='bin/jlp.exe') }}">Original VB</a></td>
- 					<td>1.1</td>
- 				</tr>
-	 			<tr>
- 					<td>Dave Marsh</td>
- 					<td>Web Conversion</td>
- 					<td>2.0</td>
- 				</tr>
- 			</tbody>
- 		</table>
- 	</div>
+	<div class="container">
+	 	<div class='row text-center'>
+	 		<img src="{{ url_for('jlp.static', filename='images/picard.png') }}" />
+		</div>
+		<div class='row text-center padded'>
+	 		<input class="btn btn-large" type="button" value="Talk to Me" onClick="randomPlay('{{ url_for('jlp.static', filename='audio/') }}', sounds)"/>
+	 	</div>
+	 	 	
 	 	
+	 	<div class='row'>
+		 	<p>
+		 		Having trouble making decisions?  Can't make up your mind on what to do?  Ask the Jean Luc Picard advisor.  It's sort of like the Magic Eight Ball you would ask questions to as a kid.  But be forewarned, even though Jean Luc has had years of Academy training in decision analysis he is sometimes prone to stern, sarcastic replies.  He might even just ignore you and change the subject.
+		 	</p>
+	 	</div>
+	 	<div class='row'>
+	 		<div class="span4 offset4">
+		 		<table class="table table-striped table-bordered table-condensed">
+		 			<thead>
+		 				<tr>
+			 				<th>Author</th>
+			 				<th>Comment</th>
+			 				<th>Revision</th>
+			 			</tr>
+		 			</thead>
+		 			<tbody>
+		 				<tr>
+		 					<td>Don Rudnickas</td>
+		 					<td><a href="{{ url_for('jlp.static', filename='bin/jlp.exe') }}">Original VB</a></td>
+		 					<td>1.1</td>
+		 				</tr>
+			 			<tr>
+		 					<td>Dave Marsh</td>
+		 					<td>Web Conversion</td>
+		 					<td>2.0</td>
+		 				</tr>
+		 			</tbody>
+		 		</table>
+		 	</div>
+	 	</div>
+</div>
 {% endblock body %}
