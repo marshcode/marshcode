@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block title %}Beautiful Mazes{% endblock title %}
+
+{% block head %} {# AUUUUGH! #}
+	
+	<style type="text/css">
+		dd{
+			padding: 0 0 0.5em 0;
+		}
+	</style>
+	
+{% endblock head %}
+
+{% block body %}
+
+<h3>Overview</h3>
+	This program was written in my spare time to brush up on my C#.  I figured a maze was complex enough to be an interesting design challenge without going overboard.
+
+<h3>Design</h3>
+	The basic idea was to create libraries that provided set pieces.  Other libraries would build off of the original set pieces or provide additional functionality.  Only the top level project would give the program any real form.
+
+<h3>Features</h3>
+	<dl>
+		<dt>Mazes</dt>
+		<dd>The cornerstone of Beautiful Mazes.  The mazes hold the layout and topology of the maze.</dd>
+
+		<dt>Characters</dt>
+		<dd>The entities that live in the maze.  They control their own movement patterns and restrictions.  This allows multiple character types to live in the maze.  Want a ghost that can pass through walls?  No problem.</dd>
+
+		<dt>Random Generators</dt>
+		<dd>Several (two) kinds of random maze generators create unique mazes.</dd>
+
+	
+		<dt>Renderers</dt>
+		<dd>Various Renderers can be utilized to visualize the maze how you see fit.  Currently, the only renderers available are text renderers with customizable character sets.  A special kind of camera renderer allows the maze to be cropped around a certain point.  This lets the developer  </dd>
+	
+	</ul>
+	
+
+<h3>Screenshots</h3>
+
+	This is a top level program designed to showcase all of the features available so far.  There are two kinds of mazes: wall maze and block mazes.  Use WASD to move the character around.  There is no "beginning" or "end" as events have not been created yet. 
+
+	<img src="{{ url_for('maze.static', filename='images/wall-maze.png') }}" />
+	<img src="{{ url_for('maze.static', filename='images/block-maze.png') }}" />
+	<img src="{{ url_for('maze.static', filename='images/block-maze-zoomed.png') }}" />
+
+<h3>Downloads</h3>
+	<div class="row">
+		<div class="span3 offset 3">
+				<table class="table table-striped table-bordered table-condensed">
+					<tr>
+						<td><a href="{{ url_for('maze.static', filename='bin/beautifulmazes.zip') }}">Beautiful Mazes</a></td>
+					</tr>
+					<tr>
+						<td><a href="https://svn.davemarsh.webfactional.com/trunk/maze/">Subversion Repository</a></td>
+					</tr>
+				</table>
+			</div>
+	</div>
+{% endblock body %}
