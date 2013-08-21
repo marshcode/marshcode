@@ -41,9 +41,37 @@
 
 	This is a top level program designed to showcase all of the features available so far.  There are two kinds of mazes: wall maze and block mazes.  Use WASD to move the character around.  There is no "beginning" or "end" as events have not been created yet. 
 
-	<img src="{{ url_for('maze.static', filename='images/wall-maze.png') }}" />
-	<img src="{{ url_for('maze.static', filename='images/block-maze.png') }}" />
-	<img src="{{ url_for('maze.static', filename='images/block-maze-zoomed.png') }}" />
+	<div class="row">
+		<div class="span3 offset 3">
+		 <div id="this-carousel-id" class="carousel slide">
+	        <div class="carousel-inner">
+	          <div class="item active">
+	             <img src="{{ url_for('maze.static', filename='images/wall-maze.png') }}" alt="Wall Maze" />
+	            <div class="carousel-caption">
+	              <p>Wall Maze</p>
+	            </div>
+	          </div>
+	          
+	          <div class="item">
+	             <img src="{{ url_for('maze.static', filename='images/block-maze.png') }}" alt="Block Maze" />
+	            <div class="carousel-caption">
+	              <p>Block Maze</p>
+	            </div>
+	          </div>
+	
+	          <div class="item">
+	             <img src="{{ url_for('maze.static', filename='images/block-maze-zoomed.png') }}" alt="Block Maze Cropped" />
+	            <div class="carousel-caption">
+	              <p>Block Mazed Zoomed In</p>
+	            </div>
+	          </div>
+	          
+	    	 </div>
+	          <a class="carousel-control left" href="#this-carousel-id" data-slide="prev">&lsaquo;</a>
+	          <a class="carousel-control right" href="#this-carousel-id" data-slide="next">&rsaquo;</a>
+	      </div>
+			</div>
+	</div>
 
 <h3>Downloads</h3>
 	<div class="row">
@@ -58,4 +86,22 @@
 				</table>
 			</div>
 	</div>
+	
+	
+
+	
+	
+
+	
+	
+	
+	
 {% endblock body %}
+
+{% block body_scripts %}
+
+<script>
+    $('.carousel').carousel('pause');
+</script>
+
+{% endblock body_scripts %}
