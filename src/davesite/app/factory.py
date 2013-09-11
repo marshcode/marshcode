@@ -26,12 +26,12 @@ def create_app(name):
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
         
-    menu_items = menu.read_menu()
+    menu_items = menu.read_menu(app.config['MENU_JSON'])
     @app.context_processor
     def menu_ctx_processor():
         
         def is_dropdown(item):
-            return hasattr(item,'keys')
+            return not isinstance(item, basestring)
         return dict(menu=menu_items,
                     is_dropdown = is_dropdown)
     

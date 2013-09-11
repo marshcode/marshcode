@@ -29,12 +29,12 @@
 			
 				<ul class="nav nav-tabs">
 			
-				{% for item, value in menu.items() %}
+				{% for item, value in menu %}
 					{% if is_dropdown(value) %}
 						    <li class="dropdown">
 						      <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ item }}<b class="caret"></b></a>
 							  <ul class="dropdown-menu">
-							  {% for subitem, address in value.items() %}
+							  {% for subitem, address in value %}
 								<li><a href="{{address}}">{{ subitem }}</a></li>
 							  {% endfor %}
 							  </ul>
