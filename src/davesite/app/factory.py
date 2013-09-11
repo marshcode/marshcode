@@ -25,10 +25,9 @@ def create_app(name):
         app.register_blueprint(jlprint.jlp, url_prefix="/jlp")
     
         if not app.debug:
-            file_handler = logging.handlers.RotatingFileHandler(app.config['ERROR_LOG_FILE'], "a", 2 * 1024 * 1024, 5)
-            file_handler.setLevel(logging.WARNING)
-
-            app.logger.addHandler(file_handler)
+            logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.WARNING,
+                                format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+            
             
         menu_items = menu.read_menu(app.config['MENU_JSON'])
         @app.context_processor
