@@ -26,28 +26,24 @@
 		<div class="header">
 			<h1>DaveSite</h1>
 
-
-			  <ul class="nav nav-tabs">
-			    <li><a href="/">Home</a></li>
-			    <li class="dropdown">
-			      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Web Projects<b class="caret"></b></a>
-			      <ul class="dropdown-menu">
-					<li><a href="{{ url_for('jlp.index') }}">Jean-Luc Picard Advisor</a></li>
-			      </ul>
-			    </li>
-			    <li >
-			      <a href="/projects">Projects</a>
-			    </li>
-			    <li class="dropdown">
-			      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Related Sites<b class="caret bottom-up"></b></a>
-			      <ul class="dropdown-menu bottom-up pull-right">
-						  <li><a href="https://trac.davemarsh.webfactional.com">Trac</a></li>
-						  <li><a href="https://svn.davemarsh.webfactional.com">SVN</a></li>
-			      </ul>
-			    </li>
-			  </ul>
-			</li>
-			</ul>
+			
+				<ul class="nav nav-tabs">
+			
+				{% for item, value in menu.items() %}
+					{% if is_dropdown(value) %}
+						    <li class="dropdown">
+						      <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ item }}<b class="caret"></b></a>
+							  <ul class="dropdown-menu">
+							  {% for subitem, address in value.items() %}
+								<li><a href="{{address}}">{{ subitem }}</a></li>
+							  {% endfor %}
+							  </ul>
+							 </li>
+					{% else %}
+						<li><a href="{{value}}">{{item}}</a></li>
+					{% endif %}
+	    		{% endfor %}
+				</ul>
 		</div>
 	
 		<div class="content">
