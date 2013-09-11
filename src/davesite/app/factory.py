@@ -27,12 +27,8 @@ def create_app(name):
         if not app.debug:
             file_handler = logging.handlers.RotatingFileHandler(app.config['ERROR_LOG_FILE'], "a", 2 * 1024 * 1024, 5)
             file_handler.setLevel(logging.WARNING)
-            
-            stream_handler = logging.StreamHandler(sys.stdout)
-            stream_handler.setLevel(logging.WARNING)
 
             app.logger.addHandler(file_handler)
-            app.logger.addHandler(stream_handler)
             
         menu_items = menu.read_menu(app.config['MENU_JSON'])
         @app.context_processor
