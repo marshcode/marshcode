@@ -11,8 +11,6 @@ from flask import Flask
 from davesite.homepage import blueprint as homeblueprint
 from davesite.jlp import blueprint as jlprint
 
-from davesite.app import menu
-
 def create_app(name):
     app = Flask(name)
     
@@ -29,7 +27,7 @@ def create_app(name):
                                 format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
             
             
-        menu_items = menu.read_menu(app.config['MENU_JSON'])
+        menu_items = app.config['MENU']
         @app.context_processor
         def menu_ctx_processor():
             
