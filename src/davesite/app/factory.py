@@ -27,13 +27,13 @@ def create_app(name):
                                 format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
             
             
+        
+        def is_dropdown(item):
+            return not isinstance(item, basestring)
         menu_items = app.config['MENU']
         @app.context_processor
         def menu_ctx_processor():
-            
-            def is_dropdown(item):
-                return not isinstance(item, basestring)
-            return dict(menu=menu_items,
+            return dict(menu=list(menu_items),
                         is_dropdown = is_dropdown)
     except Exception:
         app.logger.exception("Error while starting app:")
