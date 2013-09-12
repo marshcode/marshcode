@@ -24,16 +24,14 @@ def create_app(name):
     
         if not app.debug:
             logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.WARNING,
-                                format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
-            
-            
+                                format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')     
         
         def is_dropdown(item):
             return not isinstance(item, basestring)
         menu_items = app.config['MENU']
         @app.context_processor
         def menu_ctx_processor():
-            return dict(menu=list(menu_items),
+            return dict(_menu=list(menu_items),
                         is_dropdown = is_dropdown)
     except Exception:
         app.logger.exception("Error while starting app:")
