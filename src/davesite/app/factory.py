@@ -23,8 +23,15 @@ def create_app(name):
         app.register_blueprint(jlprint.jlp, url_prefix="/jlp")
     
         if not app.debug:
-            logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.WARNING,
+            logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.DEBUG,
                                 format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')     
+            
+            root_logger = logging.getLogger()
+            root_logger.handlers[0].setLevel(logging.WARNING) #[0] is the file handler
+        
+            stream_handler = logging.StreamHandler(sys.stdout)
+            root_logger.addHandler(stream_handler)
+
         
         def is_dropdown(item):
             return not isinstance(item, basestring)
