@@ -58,14 +58,18 @@
 			var curve_list_url = "{{ url_for('bezier.static', filename='curves/curve.list') }}"			
 			var curve_name = "curve";
 		
+			
+		
 			init_viz();
+			storage.on(storage.EVENT_ADDED, auto_frame); //reset viewer every time a curve is loaded.
 			animate();
 			load_curves(curve_list_url, [init_dat, 
 										 function(curve_list){
 											var key = Object.keys(curve_list)[0]
 											load_curve(curve_list[key]); //not sure if this will hold up.  Does dat sort the keys before adding them?
 										  },
-										  init_grid//curve must be loaded first.
+										  init_grid,//curve must be loaded first.
+
 			]);
 			//GRID VISUALIZER
 			function init_grid(){
@@ -236,7 +240,6 @@
 				var maxx = null, maxy = null, maxz = null;
 				var minx = null, miny = null, minz = null;
 				var rangex, rangey, rangez;
-				
 				$(curve_names).each(function (idx, curve_name) {
 					var curve = storage.get_curve(curve_name);
 					var xavg = 0, yavg = 0, zavg = 0;
