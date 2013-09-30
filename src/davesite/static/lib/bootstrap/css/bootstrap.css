@@ -105,7 +105,7 @@ img {
 }
 button,
 input,
-select,
+.bootstrap select,
 textarea {
   margin: 0;
   font-size: 100%;
@@ -129,7 +129,7 @@ input[type="submit"] {
   cursor: pointer;
 }
 label,
-select,
+.bootstrap select,
 button,
 input[type="button"],
 input[type="reset"],
@@ -1204,7 +1204,7 @@ legend small {
 label,
 input,
 button,
-select,
+.bootstrap select,
 textarea {
   font-size: 14px;
   font-weight: normal;
@@ -1212,7 +1212,7 @@ textarea {
 }
 input,
 button,
-select,
+.bootstrap select,
 textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -1220,7 +1220,7 @@ label {
   display: block;
   margin-bottom: 5px;
 }
-select,
+.bootstrap select,
 textarea,
 input[type="text"],
 input[type="password"],
@@ -1328,26 +1328,26 @@ input[type="radio"],
 input[type="checkbox"] {
   width: auto;
 }
-select,
+.bootstrap select,
 input[type="file"] {
   height: 30px;
-  /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  /* In IE7, the height of the .bootstrap select element cannot be changed by height, only font-size */
 
   *margin-top: 4px;
-  /* For IE7, add top margin to align select with labels */
+  /* For IE7, add top margin to align .bootstrap select with labels */
 
   line-height: 30px;
 }
-select {
+.bootstrap select {
   width: 220px;
   border: 1px solid #cccccc;
   background-color: #ffffff;
 }
-select[multiple],
-select[size] {
+.bootstrap select[multiple],
+.bootstrap select[size] {
   height: auto;
 }
-select:focus,
+.bootstrap select:focus,
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
@@ -1429,11 +1429,11 @@ textarea::-webkit-input-placeholder {
   width: 530px;
 }
 input[class*="span"],
-select[class*="span"],
+.bootstrap select[class*="span"],
 textarea[class*="span"],
 .uneditable-input[class*="span"],
 .row-fluid input[class*="span"],
-.row-fluid select[class*="span"],
+.row-fluid .bootstrap select[class*="span"],
 .row-fluid textarea[class*="span"],
 .row-fluid .uneditable-input[class*="span"] {
   float: none;
@@ -1444,7 +1444,7 @@ textarea[class*="span"],
 .input-prepend input[class*="span"],
 .input-prepend .uneditable-input[class*="span"],
 .row-fluid input[class*="span"],
-.row-fluid select[class*="span"],
+.row-fluid .bootstrap select[class*="span"],
 .row-fluid textarea[class*="span"],
 .row-fluid .uneditable-input[class*="span"],
 .row-fluid .input-prepend [class*="span"],
@@ -1540,10 +1540,10 @@ textarea.span1,
   padding-top: 5px;
 }
 input[disabled],
-select[disabled],
+.bootstrap select[disabled],
 textarea[disabled],
 input[readonly],
-select[readonly],
+.bootstrap select[readonly],
 textarea[readonly] {
   cursor: not-allowed;
   background-color: #eeeeee;
@@ -1562,12 +1562,12 @@ input[type="checkbox"][readonly] {
 .control-group.warning .checkbox,
 .control-group.warning .radio,
 .control-group.warning input,
-.control-group.warning select,
+.control-group.warning .bootstrap select,
 .control-group.warning textarea {
   color: #c09853;
 }
 .control-group.warning input,
-.control-group.warning select,
+.control-group.warning .bootstrap select,
 .control-group.warning textarea {
   border-color: #c09853;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1575,7 +1575,7 @@ input[type="checkbox"][readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .control-group.warning input:focus,
-.control-group.warning select:focus,
+.control-group.warning .bootstrap select:focus,
 .control-group.warning textarea:focus {
   border-color: #a47e3c;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
@@ -1596,12 +1596,12 @@ input[type="checkbox"][readonly] {
 .control-group.error .checkbox,
 .control-group.error .radio,
 .control-group.error input,
-.control-group.error select,
+.control-group.error .bootstrap select,
 .control-group.error textarea {
   color: #b94a48;
 }
 .control-group.error input,
-.control-group.error select,
+.control-group.error .bootstrap select,
 .control-group.error textarea {
   border-color: #b94a48;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1609,7 +1609,7 @@ input[type="checkbox"][readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .control-group.error input:focus,
-.control-group.error select:focus,
+.control-group.error .bootstrap select:focus,
 .control-group.error textarea:focus {
   border-color: #953b39;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
@@ -1630,12 +1630,12 @@ input[type="checkbox"][readonly] {
 .control-group.success .checkbox,
 .control-group.success .radio,
 .control-group.success input,
-.control-group.success select,
+.control-group.success .bootstrap select,
 .control-group.success textarea {
   color: #468847;
 }
 .control-group.success input,
-.control-group.success select,
+.control-group.success .bootstrap select,
 .control-group.success textarea {
   border-color: #468847;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1643,7 +1643,7 @@ input[type="checkbox"][readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .control-group.success input:focus,
-.control-group.success select:focus,
+.control-group.success .bootstrap select:focus,
 .control-group.success textarea:focus {
   border-color: #356635;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
@@ -1664,12 +1664,12 @@ input[type="checkbox"][readonly] {
 .control-group.info .checkbox,
 .control-group.info .radio,
 .control-group.info input,
-.control-group.info select,
+.control-group.info .bootstrap select,
 .control-group.info textarea {
   color: #3a87ad;
 }
 .control-group.info input,
-.control-group.info select,
+.control-group.info .bootstrap select,
 .control-group.info textarea {
   border-color: #3a87ad;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1677,7 +1677,7 @@ input[type="checkbox"][readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .control-group.info input:focus,
-.control-group.info select:focus,
+.control-group.info .bootstrap select:focus,
 .control-group.info textarea:focus {
   border-color: #2d6987;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
@@ -1692,13 +1692,13 @@ input[type="checkbox"][readonly] {
 }
 input:focus:invalid,
 textarea:focus:invalid,
-select:focus:invalid {
+.bootstrap select:focus:invalid {
   color: #b94a48;
   border-color: #ee5f5b;
 }
 input:focus:invalid:focus,
 textarea:focus:invalid:focus,
-select:focus:invalid:focus {
+.bootstrap select:focus:invalid:focus {
   border-color: #e9322d;
   -webkit-box-shadow: 0 0 6px #f8b9b7;
   -moz-box-shadow: 0 0 6px #f8b9b7;
@@ -1748,8 +1748,8 @@ select:focus:invalid:focus {
 }
 .input-append input,
 .input-prepend input,
-.input-append select,
-.input-prepend select,
+.input-append .bootstrap select,
+.input-prepend .bootstrap select,
 .input-append .uneditable-input,
 .input-prepend .uneditable-input,
 .input-append .dropdown-menu,
@@ -1760,8 +1760,8 @@ select:focus:invalid:focus {
 }
 .input-append input,
 .input-prepend input,
-.input-append select,
-.input-prepend select,
+.input-append .bootstrap select,
+.input-prepend .bootstrap select,
 .input-append .uneditable-input,
 .input-prepend .uneditable-input {
   position: relative;
@@ -1774,8 +1774,8 @@ select:focus:invalid:focus {
 }
 .input-append input:focus,
 .input-prepend input:focus,
-.input-append select:focus,
-.input-prepend select:focus,
+.input-append .bootstrap select:focus,
+.input-prepend .bootstrap select:focus,
 .input-append .uneditable-input:focus,
 .input-prepend .uneditable-input:focus {
   z-index: 2;
@@ -1822,14 +1822,14 @@ select:focus:invalid:focus {
   border-radius: 4px 0 0 4px;
 }
 .input-append input,
-.input-append select,
+.input-append .bootstrap select,
 .input-append .uneditable-input {
   -webkit-border-radius: 4px 0 0 4px;
   -moz-border-radius: 4px 0 0 4px;
   border-radius: 4px 0 0 4px;
 }
 .input-append input + .btn-group .btn:last-child,
-.input-append select + .btn-group .btn:last-child,
+.input-append .bootstrap select + .btn-group .btn:last-child,
 .input-append .uneditable-input + .btn-group .btn:last-child {
   -webkit-border-radius: 0 4px 4px 0;
   -moz-border-radius: 0 4px 4px 0;
@@ -1848,14 +1848,14 @@ select:focus:invalid:focus {
   border-radius: 0 4px 4px 0;
 }
 .input-prepend.input-append input,
-.input-prepend.input-append select,
+.input-prepend.input-append .bootstrap select,
 .input-prepend.input-append .uneditable-input {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
 }
 .input-prepend.input-append input + .btn-group .btn,
-.input-prepend.input-append select + .btn-group .btn,
+.input-prepend.input-append .bootstrap select + .btn-group .btn,
 .input-prepend.input-append .uneditable-input + .btn-group .btn {
   -webkit-border-radius: 0 4px 4px 0;
   -moz-border-radius: 0 4px 4px 0;
@@ -1923,9 +1923,9 @@ input.search-query {
 .form-search textarea,
 .form-inline textarea,
 .form-horizontal textarea,
-.form-search select,
-.form-inline select,
-.form-horizontal select,
+.form-search .bootstrap select,
+.form-inline .bootstrap select,
+.form-horizontal .bootstrap select,
 .form-search .help-inline,
 .form-inline .help-inline,
 .form-horizontal .help-inline,
@@ -2018,7 +2018,7 @@ legend + .control-group {
   margin-bottom: 0;
 }
 .form-horizontal input + .help-block,
-.form-horizontal select + .help-block,
+.form-horizontal .bootstrap select + .help-block,
 .form-horizontal textarea + .help-block,
 .form-horizontal .uneditable-input + .help-block,
 .form-horizontal .input-prepend + .help-block,
@@ -3539,13 +3539,13 @@ input[type="submit"].btn.btn-mini {
   clear: both;
 }
 .navbar-form input,
-.navbar-form select,
+.navbar-form .bootstrap select,
 .navbar-form .radio,
 .navbar-form .checkbox {
   margin-top: 5px;
 }
 .navbar-form input,
-.navbar-form select,
+.navbar-form .bootstrap select,
 .navbar-form .btn {
   display: inline-block;
   margin-bottom: 0;
@@ -5381,7 +5381,7 @@ button.close {
   .input-xlarge,
   .input-xxlarge,
   input[class*="span"],
-  select[class*="span"],
+  .bootstrap select[class*="span"],
   textarea[class*="span"],
   .uneditable-input {
     display: block;
