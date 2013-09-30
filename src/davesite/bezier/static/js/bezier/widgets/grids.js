@@ -49,6 +49,7 @@ BEZIER.widgets.control_point_grid = function (storage, curve_name) {
 		},
 
 		afterChange: function (changes, source) {
+
             if (!changes) {
                 return;
             }
@@ -59,6 +60,7 @@ BEZIER.widgets.control_point_grid = function (storage, curve_name) {
 			var curve = storage.get_curve(curve_name);
             var row, prop, old_val, new_val;
             var point;
+
             $(changes).each(function (idx, change) {
                 row = change[0]; prop = change[1]; old_val = change[2]; new_val = change[3];
                 point = curve.get_point(row);
@@ -74,6 +76,7 @@ BEZIER.widgets.control_point_grid = function (storage, curve_name) {
                 } else if (prop === 'z') {
                     point.z = new_val;
                 }
+                
             });
 
             storage.updated(curve_name);
@@ -81,21 +84,25 @@ BEZIER.widgets.control_point_grid = function (storage, curve_name) {
 		},
 		
 		afterCreateRow: function (index) {
+
 			if (!storage.has_curve(curve_name)) {
 				return;
 			}
-			
+
 			var curve = storage.get_curve(curve_name);
 			var pt = BEZIER.core.dim3(0, 0, 0);
-			
-            if (curve.num_points() < index) {
+	
+			console.log(index);
+			console.log(curve.num_points())
+            if (index < curve.num_points() ) {
+
                 curve.insert_point(index, pt);
 			} else {
 				curve.append_point(pt);
 			}
-			
+				
 			storage.updated(curve_name);
-			
+
 		}
 		
 
