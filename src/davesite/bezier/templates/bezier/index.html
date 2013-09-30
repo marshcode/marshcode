@@ -1,0 +1,300 @@
+{% extends "layout.html" %}
+{% block title %}Bezier Curve Viewer{% endblock title %}
+
+{% block head %}
+	<link rel=stylesheet type=text/css href="{{ url_for('bezier.static', filename='css/style.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('bezier.static', filename='js/handsontable/jquery.handsontable.full.css') }}">
+
+	
+{% endblock head %}
+
+{% block body %}
+
+		<div id="grid_container" style="margin-right:25%;width:300px;;float:right;overflow:hidden;">
+			<input id="grid_append" type="button" value="Append Row" />
+		</div>
+	
+		<div id="viz_container" style="width:800px;position:relative;margin:20px 0 0 20px;">
+			<span id="dat_container" style="position:absolute;right:0px;"></span>
+		</div>
+
+{% endblock body %}
+{% block body_scripts %}
+		
+
+		<!-- These should be served from a CDN -->
+		<script src="{{ url_for('bezier.static', filename='js/three/three.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/three/TrackballControls.js') }}"></script>
+
+		<script src="{{ url_for('bezier.static', filename='js/three/Detector.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/three/stats.min.js') }}"></script>
+
+		<script src="{{ url_for('bezier.static', filename='js/dat/dat.gui.js') }}"></script>
+	  	
+	  	  
+		<!-- 
+		Jquery already being included up above below
+		<script src="{{ url_for('bezier.static', filename='js/jquery/jquery.js') }}"></script> 
+		-->
+		
+		<script src="{{ url_for('bezier.static', filename='js/underscore/underscore-min.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/backbone/backbone-min.js') }}"></script>
+		 			  
+		<script src="{{ url_for('bezier.static', filename='js/handsontable/jquery.handsontable.full.js') }}"></script>
+		
+		<!-- This should be minified and combined into one file -->
+		<script src="{{ url_for('bezier.static', filename='js/bezier/core/bezier.js') }}"></script>	
+		<script src="{{ url_for('bezier.static', filename='js/bezier/core/storage.js') }}"></script>	
+		<script src="{{ url_for('bezier.static', filename='js/bezier/widgets/grids.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/bezier/widgets/visualizers.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/bezier/parsers/single.js') }}"></script>
+ 		
+		<script type="text/javascript">
+			////////////////////////
+			//INITIALIZATION
+			////////////////////////
+			var viz3D;
+			var storage;
+			var curve_list_url = "{{ url_for('bezier.static', filename='curves/curve.list') }}"			
+			var curve_name = "curve";
+		
+			init_viz();
+			animate();
+			load_curves(curve_list_url, [init_dat, 
+										 function(curve_list){
+											var key = Object.keys(curve_list)[0]
+											load_curve(curve_list[key]); //not sure if this will hold up.  Does dat sort the keys before adding them?
+										  },
+										  init_grid//curve must be loaded first.
+			]);
+			//GRID VISUALIZER
+			function init_grid(){
+				var cpg = BEZIER.widgets.control_point_grid(storage, curve_name)
+				var container = $("#grid_container");
+				var append_button = $("#grid_append");
+				
+				container.prepend(cpg.dom_element);
+				
+				//This will be handled by another grid object in beta3.  It will be some sort collection object that handles adding and removing
+				//each grid only handles editing.
+				storage.on(storage.EVENT_ADDED, function () {					
+					cpg.update();
+				});
+				
+				append_button.click( function(){
+					var count = cpg.dom_element.handsontable('countRows');
+					cpg.dom_element.handsontable('alter', 'insert_row', count);
+				});
+			}
+
+			
+			//CANVAS VISUALIZER
+			function init_viz(){
+				storage = BEZIER.storage.curve_storage();
+				viz3D = BEZIER.widgets.visualizer_3d(storage, 800, 800);
+				var container = $('#viz_container');
+				container.append(viz3D.get_dom_element())
+			}
+
+		
+			//////////////////
+			//GUI and controllers
+			//////////////////
+			function init_dat(item_list){
+				controller = {};
+				
+				controller.clear_curve = function (){
+									clear_curve(curve_name);		
+								 }
+				controller.refresh_curve = function (){
+					gui.destroy();
+					$(gui.domElement).remove();
+					load_curves(curve_list_url, [init_dat]);
+				}
+
+				controller.auto_frame = function (){
+					auto_frame();
+				}
+
+				controller.curve_list = "";				
+
+				controller.points_visible = true;
+				controller.control_polygon_visible = true;
+				controller.curve_visible = true;
+
+				controller.size = 0.25;
+
+				var dat_container = $("#dat_container")
+				var gui = new dat.GUI({ autoPlace: false });
+				
+				/////////////////////////
+				//LOAD CURVES
+				/////////////////////////
+				var load_curve_folder = gui.addFolder('Load Curves');
+				
+				var curve_list = load_curve_folder.add(controller, 'curve_list', item_list ).name("Curve List");
+				var refresh_curve = load_curve_folder.add(controller, 'refresh_curve').name("Refresh");
+				
+				/////////////////////////
+				//EDIT CURVES
+				/////////////////////////
+				var edit_curve_folder = gui.addFolder('Edit Curves');
+				edit_curve_folder.add(controller, 'clear_curve').name("Clear Curve");
+	
+				/////////////////////////
+				//VIEW CURVES
+				/////////////////////////
+				var view_curve_folder = gui.addFolder('View');
+				view_curve_folder.add(controller, 'auto_frame').name("Auto Frame");
+				
+				var size_handle = view_curve_folder.add(controller, 'size', 0, 1).name('Size');
+				size_handle.onChange(function(curve_size){
+					viz3D.set_curve_size(curve_name, curve_size);
+					storage.updated(curve_name);
+				});
+				
+				var point_handle = view_curve_folder.add(controller, 'points_visible').name("Points Visible");
+				var polygon_handle = view_curve_folder.add(controller, 'control_polygon_visible').name("Polygon Visible");
+				var curve_handle = view_curve_folder.add(controller, 'curve_visible').name("Curve Visible");
+				
+				point_handle.onChange( function(point_visibility){
+					viz3D.set_points_visibility(curve_name, point_visibility);
+					viz3D.update();
+				});
+				polygon_handle.onChange( function(polygon_visibility){
+					viz3D.set_polygon_visibility(curve_name, polygon_visibility);
+					viz3D.update();
+				});				
+				curve_handle.onChange( function(curve_visible){
+					viz3D.set_curve_visibility(curve_name, curve_visible);
+					viz3D.update();
+				});				
+				
+				
+				///////////////////
+				//LOAD CURVE 2: callbacks
+				///////////////////
+				curve_list.onChange( function(e){				
+					load_curve(controller.curve_list)
+					var options = viz3D.get_options("default");
+					point_handle.setValue(options.points_visible);
+					polygon_handle.setValue(options.polygon_visible);
+					curve_handle.setValue(options.curve_visible);
+					size_handle.setValue(options.size);
+					
+				});
+				
+				
+				dat_container.append(gui.domElement);
+			
+			
+			}			
+			//////////////////////
+			//Curve Ajax
+			//////////////////////
+			function load_curve(url){
+				$.ajax({url: url, cache: false}).done(function ( data ) {
+					var curve = BEZIER.parsers.single(data);
+					storage.clear_curve(curve_name);
+					storage.set_curve(curve_name, curve);
+				  });
+			}
+			
+			
+			function load_curves(url, callbacks){
+				$.ajax({url: url}).done(function ( data ) {
+					curve_list = jQuery.parseJSON(data);
+					
+					callbacks.forEach(function (f) {
+						f(curve_list);
+					});
+				  });
+			
+			}
+			
+			////////////////////////
+			//Visualizers
+			////////////////////////
+		
+			function animate() {
+				requestAnimationFrame( animate );
+				viz3D.update();
+			}
+			
+			function clear_curve(curve_name){
+
+				if(storage.has_curve(curve_name)){
+					storage.clear_curve(curve_name)
+				}
+			
+			 }
+		
+			 function auto_frame() {
+			 	var curve_names = storage.get_curve_names();
+				var centers = [];
+				var lookx = 0, looky = 0, lookz = 0;
+				var maxx = null, maxy = null, maxz = null;
+				var minx = null, miny = null, minz = null;
+				var rangex, rangey, rangez;
+				
+				$(curve_names).each(function (idx, curve_name) {
+					var curve = storage.get_curve(curve_name);
+					var xavg = 0, yavg = 0, zavg = 0;
+					var num_points = curve.num_points();
+					
+					var pt;
+					for (var i = 0; i < curve.num_points(); i++) {
+						pt = curve.get_point(i);
+						xavg += pt.x;
+						yavg += pt.y;
+						zavg += pt.z;
+						
+						maxx = Math.max(pt.x, maxx);
+						maxy = Math.max(pt.y, maxy);
+						maxz = Math.max(pt.z, maxz);				
+					
+						minx = Math.min(pt.x, minx);
+						miny = Math.min(pt.y, miny);
+						minz = Math.min(pt.z, minz);	
+					
+					}
+					
+					lookx += (xavg / num_points);
+					looky += (yavg / num_points);
+					lookz += (zavg / num_points);
+					
+				});		
+				
+				lookx /= curve_names.length;
+				looky /= curve_names.length;
+				lookz /= curve_names.length;
+				
+				rangex = maxx - minx;
+				rangey = maxy - miny;
+				rangez = maxz - minz;
+				
+				//check for a dimension that did not move at all.  If we find one, this implies that the curve lies in the 2D plane.  
+				//Bounding boxes will not work properly for this.  Set to the center of the other two
+				var position = new THREE.Vector3(maxx * 2, maxy * 2, maxz * 2);
+				var target   = new THREE.Vector3(lookx, looky, lookz);	
+				//TODO: the 50 here is juat a random hardcode.  The real solution is much more complicated.	
+				
+				//zoom distance per world distance.  Calculated experimentally.  This should be OK as long as the aspect ratio is 1
+				var magic_ratio = 13/10; 
+				var view = viz3D.get_view();
+				if (rangex === 0){
+					position = new THREE.Vector3(rangey * magic_ratio, looky, lookz);
+				}else if (rangey === 0){
+					position = new THREE.Vector3(lookx, rangex * magic_ratio, lookz);
+				}else if (rangez === 0){
+					position = new THREE.Vector3(lookx, looky, rangey * magic_ratio);
+				}
+			 
+			 	viz3D.set_view(target, position)
+			 
+			 }
+			
+				
+		</script>
+
+{% endblock body_scripts %}
