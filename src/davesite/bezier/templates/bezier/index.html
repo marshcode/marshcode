@@ -151,7 +151,7 @@
 				var view_curve_folder = gui.addFolder('View');
 				view_curve_folder.add(controller, 'auto_frame').name("Auto Frame");
 				
-				var size_handle = view_curve_folder.add(controller, 'size', 0, 10).name('Size');
+				var size_handle = view_curve_folder.add(controller, 'size', 0, 5).name('Size');
 				size_handle.onChange(function(curve_size){
 					viz3D.set_curve_size(curve_name, curve_size);
 					storage.updated(curve_name);
