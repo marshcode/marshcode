@@ -11,6 +11,7 @@ from flask import Flask
 from davesite.homepage import blueprint as homeblueprint
 from davesite.jlp import blueprint as jlprint
 from davesite.bezier import blueprint as bezierblueprint
+from davesite.lsyslegacy import blueprint as lsyslegblueprint
 
 def create_app(name):
     app = Flask(name)
@@ -23,6 +24,7 @@ def create_app(name):
         app.register_blueprint(homeblueprint.home_page)
         app.register_blueprint(jlprint.jlp, url_prefix="/jlp")
         app.register_blueprint(bezierblueprint.bezier, url_prefix="/bezier")
+        app.register_blueprint(lsyslegblueprint.lsyslegacy, url_prefix="/lsysleg")
     
         if not app.debug:
             logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.DEBUG,
