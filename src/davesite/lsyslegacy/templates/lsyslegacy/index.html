@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{% block title %}Legacy L-System{% endblock title %}
+
+{% block head %}
+	<style type="text/css">
+	          table{
+	          	border-collapse:collapse;
+          	  }
+	          table, th, td{
+	          	border: 1px solid black;
+          	  }
+	          input[type="number"]{
+	          	width:3em;
+	          }
+	          textarea, input{
+	          	width: 20em;
+	          }
+	          iframe{
+	          	border:0;
+	          	overflow:hidden;
+	          	/*height:300em;*/
+	          	width:100%%;
+	          }
+
+	</style>
+	
+	<script type="text/javascript">
+	
+		function frame_resize(){
+			$('#lsys_frame').contents().find('body').css({"min-height": "100", "overflow" : "hidden"});
+			$('#lsys_frame').height($('#lsys_frame').contents().find('body').height() + 20);	
+		}
+
+	</script>
+	
+{% endblock head %}
+
+{% block body %}
+		<h4>L-System Parser</h4>
+		<p>
+            Welcome to a simple <a href="http://en.wikipedia.org/wiki/L-system">L-System</a> parser.  Consult the following table for valid production symbols.
+	    <p>
+	
+	<div>
+	
+    	<div style="float:left;">
+            <form method='get' target='_viewer' action="{{ url_for('lsyslegacy.handler') }}">
+            
+                <label for="start"> start: </label> <br />
+                <input type="text" name="start" id="start" value="{{values['start']}}" />
+                    
+                <br />
+            
+                <label for="productions"> productions: </label> <br />
+                <textarea name="productions" id="productions" rows="5" cols="30">{{values['productions']}}</textarea>
+            
+                <br />
+            
+                <div style="float:left;">
+                    <label for="angle"> angle: </label> <br />
+                    <input type="number" name="angle" id="iterations" min="0" max="360" value="{{values['angle']}}" />
+                </div>
+                <div style="float:left;padding-left:1em;">
+                    <label for="step"> step: </label> <br />
+                    <input type="number" name="step" id="step" min="0" max="50" value="{{values['step']}}" />
+                </div>
+                <div style="float:left;padding-left:1em;">
+                    <label for="iterations"> iterations: </label> <br />
+                    <input type="number" name="iterations" id="iterations" min="1" max="20" value="{{values['iterations']}}" />
+                </div>
+            
+                <br style='clear:both' />
+            
+                <input type='submit' value='Submit' class='btn' />
+            	<input type='button' value='Force Resize' class='btn' onclick="frame_resize();" />
+            
+            </form>
+	    </div>
+	
+    	<table style='float:left;margin-left:3em;'>
+    		<thead>
+    			<tr>
+    				<TH>INSTRUCTION</TH>
+    				<TH>SYMBOL</TH>
+    			</tr>		
+    		</thead>
+    		<tbody>
+    			<tr>
+    				<td>Draw forward </td>
+    				<td>a, b, f </td>
+    			</tr>
+    			<tr>
+    				<td>Move forward</td>
+    				<td>m</td>
+    			</tr>			
+    			<tr>
+    				<td>Left </td>
+    				<td>+ </td>
+    			</tr>
+    			<tr>
+    				<td>Right</td>
+    				<td>-</td>
+    			</tr>
+    			<tr>
+    				<td>Push/Pop</td>
+    				<td>[/]</td>
+    			</tr>
+                <tr>
+                    <td>Color</td>
+                    <td>c#</td>
+                </tr>
+    			<tr>
+    				<td>Place Holders</td>
+    				<td>all other letters</td>
+    			</tr>
+                <tr>
+                    <td>Comment Line</td>
+                    <td>#</td>
+                </tr>
+    		</tbody>
+    	</table>
+            
+        <table style='float:left;margin-left:3em;'>
+            <thead>
+                <tr>
+                    <TH>Marker</TH>
+                    <TH>Color</TH>
+                </tr>        
+            </thead>
+            <tbody>
+                <tr><td>R</td><td style='background-color:red;'>&nbsp;</td></tr>
+                <tr><td>O</td><td style='background-color:orange;'>&nbsp;</td></tr>
+                <tr><td>Y</td><td style='background-color:yellow;'>&nbsp;</td></tr>
+                <tr><td>G</td><td style='background-color:green;'>&nbsp;</td></tr>
+                <tr><td>B</td><td style='background-color:blue;'>&nbsp;</td></tr>
+                <tr><td>P</td><td style='background-color:purple;'>&nbsp;</td></tr>
+                <tr><td>L</td><td style='background-color:black;'>&nbsp;</td></tr>
+                <tr><td>N</td><td style='background-color:brown;'>&nbsp;</td></tr>
+            </tbody>
+        </table>
+        
+        <table style='float:left;margin-left:3em;'>
+            <thead>
+                <tr>
+                    <TH>Examples</TH>
+                </tr>        
+            </thead>
+            <tbody>
+                <tr><td> <a href='?example=dragon'>Dragon Curve</a> </td></tr>
+                <tr><td> <a href='?example=plant'>Fractal Plant</a> </td></tr>
+                <tr><td> <a href='?example=plant2'>Alternate Plant</a> </td></tr>
+                <tr><td> <a href='?example=sierpinski'>Sierpinski</a> </td></tr>
+                <tr><td> <a href='?example=koch'>Koch</a> </td></tr>
+                <tr><td> <a href='?example=snowflake'>Snowflake</a> </td></tr>
+            </tbody>
+        </table>
+        
+    </div>
+
+        <p style='clear:both' />
+
+        <iframe id = "lsys_frame" name="_viewer" scrolling="no"></iframe>
+
+
+{% endblock body %}
+
+
+{% block body_scripts %}
+{% endblock body_scripts %}
