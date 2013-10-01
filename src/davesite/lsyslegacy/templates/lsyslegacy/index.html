@@ -18,6 +18,8 @@
 	          iframe{
 	          	border:0;
 	          	overflow:hidden;
+	          	/*height:300em;*/
+	          	width:100%%;
 	          }
 
 	</style>
@@ -69,7 +71,8 @@
             
                 <br style='clear:both' />
             
-                <input type='submit' value='submit' class='btn' />
+                <input type='submit' value='Submit' class='btn' />
+            	<input type='button' value='Force Resize' class='btn' onclick="frame_resize();" />
             
             </form>
 	    </div>
@@ -156,7 +159,7 @@
 
         <p style='clear:both' />
 
-        <iframe id = "lsys_frame" name="_viewer" style="height:300em;width:100%%;" scrolling="no"></iframe>
+        <iframe id = "lsys_frame" name="_viewer" scrolling="no"></iframe>
 
 
 {% endblock body %}
