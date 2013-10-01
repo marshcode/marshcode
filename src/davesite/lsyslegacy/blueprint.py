@@ -54,7 +54,6 @@ def handler():
     if img_data is not None:
         img_data = base64.encodestring(img_data)
     else:
-        img_data = ''
-    print messages    
+        img_data = ''   
     return render_template('lsyslegacy/image.html', messages = messages, img = img_data)
     
