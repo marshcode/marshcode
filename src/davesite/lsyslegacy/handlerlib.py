@@ -18,7 +18,6 @@ def parse_form_input(request):
     for key, (field_name, validation_func) in validators.items():
         
         var = request.args.get(key, None)
-        print key, var, type(var) 
         if len(var.strip()) == 0:
             messages.append("Fill out {0}".format(field_name))
         validated_items[key] = validation_func(var)
@@ -42,14 +41,14 @@ def get_lsystem_drawing(start, productions, angle, step, iterations):
 
     lsys = core.LSystem(production_rules, 
                         start=start)
-    expansion = lsys.expand(iterations)
+    expansion = lsys.expand_iter(iterations)
     color_map = dict(R="red", O="orange", Y="yellow", G="green", B="blue", P="purple", L="black", N="brown")
     ds = drawlib.DrawImage(draw = 'abf', forward='m', left="+", right="-", color_escape='c', color_map=color_map)
     
     f = StringIO.StringIO()
     ds.step = step
     ds.angle = angle
-    status = ds.draw(expansion, timeout=0.5)        
+    status = ds.draw(expansion, timeout=2)        
     ds.save(f, "PNG")
     
     unrecognized = status['unrecognized']

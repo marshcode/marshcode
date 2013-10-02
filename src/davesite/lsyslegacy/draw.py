@@ -56,7 +56,6 @@ class DrawingSystem(object):
         start_time = time.time()
         
         self.start()
-        expansion = (l for l in expansion)
         for l in expansion:
             l = l.upper()
             if l in self.forward_chr:
@@ -81,7 +80,7 @@ class DrawingSystem(object):
                 unrecognized.add( l )
                 
             if timeout is not None and time.time() - start_time > timeout:
-                messages.append("Drawing reached timeout at {0:.2} seconds".format(timeout))
+                messages.append("Drawing reached timeout at {0:.2} seconds".format(float(timeout)))
                 break
                 
         self.end()
