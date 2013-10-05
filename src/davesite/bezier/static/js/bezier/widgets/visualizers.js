@@ -190,6 +190,10 @@ BEZIER.widgets.visualizer_3d = function (curve_storage, width, height, stage_fac
 			scene.add(meshes.control_polygon);
 			scene.add(meshes.curve);
 			
+			that.set_points_visibility(curve_name, options.points_visible);
+			that.set_polygon_visibility(curve_name, options.polygon_visible);
+			that.set_curve_visibility(curve_name, options.curve_visible);
+			
 			that.update();
 		}
 	
