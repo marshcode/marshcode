@@ -16,11 +16,17 @@ def parse_form_input(request):
     validated_items = {}
     messages = []
     for key, (field_name, validation_func) in validators.items():
-        
         var = request.args.get(key, None)
+        if not var:
+            messages.append("Did not receive parameter: {0}".format(field_name))
+            continue
         if len(var.strip()) == 0:
             messages.append("Fill out {0}".format(field_name))
-        validated_items[key] = validation_func(var)
+            continue
+        try:
+            validated_items[key] = validation_func(var)
+        except:
+            messages.append("Invalid {0} value: {1}".format(field_name, var))
 
     return validated_items, messages
 
