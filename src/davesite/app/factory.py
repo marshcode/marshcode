@@ -16,8 +16,7 @@ from davesite.bezier import blueprint as bezierblueprint
 from davesite.lsyslegacy import blueprint as lsyslegblueprint
 
 class URLPrefixMiddleware(object):
-    """Middleware used to insert prefixes on any links created with flask.url_for
-       The application configuration must contain a variable SCRIPT_NAME that equals the desired prefix.   
+    """Middleware used to insert prefixes on any links created with flask.url_for  
     """
     def __init__(self, app, prefix):
         """
