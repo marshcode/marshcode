@@ -44,22 +44,6 @@ class URLPrefixMiddleware(object):
         environ['SCRIPT_NAME'] = self.prefix
         return self.app(environ, start_response)
 
-def handle_menu(app):
-    """
-    Overview: Helper method that reads the menu structure out of the configuration and defines a few template oriented methods
-              used during rendering
-    Parameters:
-        app: Flask application to configure the menu on 
-              
-    """
-    def is_dropdown(item):
-        return not isinstance(item, basestring)
-    menu_items = app.config['MENU']
-    @app.context_processor
-    def menu_ctx_processor():
-        return dict(_menu=list(menu_items),
-                    is_dropdown = is_dropdown)
-
 def handle_logging(app):
     """
     Overview: Helper function that will configure logging to the console and to a file
@@ -123,8 +107,6 @@ def create_app(name='davesite', environmental_config="DAVESITE_CONFIG"):
         
         if not app.debug:
             handle_logging(app)
-            
-        handle_menu(app)
     
     except Exception:
         app.logger.exception("Error while starting app:")
