@@ -61,7 +61,7 @@ def handle_blueprints(app):
     app.register_blueprint(lsyslegblueprint.lsyslegacy, url_prefix="/lsysleg")
 
 def create_app(name='davesite', environmental_config="DAVESITE_CONFIG"):
-    """Factory method that is responsible for the following:
+    """Factory method that is responsible for the following.  Returns the configured Flask app object.
         
     * Reading the configuration.  Two configuration vectors are provided:
         1)  A default configuration file in the source tree provides sensible defaults

@@ -7,7 +7,12 @@ Created on Sep 26, 2011
 import cStringIO as StringIO
 
 class LSystem(object):
+    """
+    Represents an LSystem in the form of a set of production rules and the default starting string.
     
+    Rules: dictionary-like object that has a single letter for the key and a string for the rule.  
+    Start: default starting string
+    """
     def __init__(self, rules, start):
         
         self.rules = dict()
@@ -16,10 +21,19 @@ class LSystem(object):
         self.start  = start.upper()
         
     def expand(self, level, start=None):
+        """Returns a string representation of the LSystem expanded to the given level.  This could be quite memory intensive and should be used carefully.
+        Level: level of iteration to expand the LSystem to.
+        Start: starting string to overwrite the one given in the constructor.
+        
+        """
         return "".join( self.expand_iter(level, start) )
         
         
     def expand_iter(self, level, start=None):
+        """Returns an iterator that represents the expansion.  Letters are returned one at a time until StopIteration is reached.
+        Level: level of iteration to expand the LSystem to.
+        Start: starting string to overwrite the one given in the constructor.
+        """
         start = self.start if start is None else start
         for i in self._expand(level, start.upper()):
             yield i

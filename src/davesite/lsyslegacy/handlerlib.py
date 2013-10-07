@@ -1,3 +1,7 @@
+"""
+Request handling library
+"""
+
 import HTMLParser
 import cStringIO as StringIO
 
@@ -5,6 +9,13 @@ import davesite.lsyslegacy.draw as drawlib
 import davesite.lsyslegacy.core as core
 
 def parse_form_input(request):
+    """Method to validate the wsgi request object that came from the client.
+    
+    request: wsgi request object that should have an 'args' dictionary.
+    
+    returns a tuple of a dictionary with the validated items and a list of generated messages.
+    
+    """
     h = HTMLParser.HTMLParser()
 
     validators = dict(start = ("start", h.unescape),
@@ -31,6 +42,14 @@ def parse_form_input(request):
     return validated_items, messages
 
 def get_lsystem_drawing(start, productions, angle, step, iterations):
+    """Take all information given by the client and return a PIL image and a list of messages
+    
+    start:       string representing the start string.
+    productions: dictionary of rules representing the LSystem.
+    angle:       angle to rotate (in degrees) when rotating left or right.
+    iterations:  number of iterations to run through.
+    
+    """
     production_rules = dict()
     messages = []
     

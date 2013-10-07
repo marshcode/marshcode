@@ -1,6 +1,15 @@
 '''
 Created on Sept 30, 2013
 
+Legacy LSystem code.  THis code started off as me hacking around one afternoon and it shows.  This code will be updated for security and massive usability 
+issues only.  A re-write is planned but there is no timeline.  However, it provides enough functionality to be worth displaying.
+
+Input is taken from the client and handed to the handlerlib where the LSystem is expanded to the desired iteration and drawn using PIL.  Timeouts in the 
+drawing handler exist to prevent excessive memory usage. 
+
+The image is base64 encoded and returned to the user along with the list of messages.  Otherwise, the image would have to be cached where it could be loaded
+from the client dynamically.  
+
 @author: david
 '''
 import base64
@@ -29,6 +38,7 @@ examples = dict(empty  = dict(start='', productions='', angle=90, step=5, iterat
 
 @lsyslegacy.route('/')
 def index():
+    """Renders the main user interface and pre-populate it with the given example"""
     
     example = examples.get(request.args.get('example'), examples['empty'])
     return render_template('lsyslegacy/index.html', values = example)
@@ -39,6 +49,7 @@ def index():
 
 @lsyslegacy.route('/handler')
 def handler():
+    """Handles. validates and returns the image or a list of problems encountered and ways to avoid them."""
 
     validated_keys, messages = handlerlib.parse_form_input(request)
     img_data = None

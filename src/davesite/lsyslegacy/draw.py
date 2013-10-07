@@ -1,6 +1,8 @@
 '''
 Created on Sep 26, 2011
 
+Drawing library that will operation on an  LSystem expansion and return a representation of the expansion as the defined concrete subclass.
+
 @author: david
 '''
 import itertools
@@ -12,7 +14,16 @@ import Image, ImageDraw
 class DrawingSystemException(Exception): pass
 
 class DrawingSystem(object):
-    
+    """Abstract class that implements the Template pattern.  This class handles the basic logic behind drawing an LSystem and
+     allows the subclasses to implement the actual drawing code.
+     
+     draw: string containing each character to be recognized as a command to move forward and draw.
+     forward: string containing each character to be recognized as a command to move forward but NOT draw.
+     left: string containing each character to be recognized as a command to turn left.     
+     right: string containing each character to be recognized as a command to turn right.  
+     color_escape: string containing each character to be recognized as a color escape command.  
+     
+    """
     def __init__(self, draw, forward, left, right, color_escape):
         self.forward_chr = forward.upper() #move forward
         self.left_chr = left.upper()       #turn left
@@ -49,6 +60,13 @@ class DrawingSystem(object):
         raise NotImplementedError("To Be Implemented in Subclass")
         
     def draw(self, expansion, timeout=None):
+        """draws the LSystem expansion according to the rules of the concrete class.
+        
+        expansion: string or string-yielding generator representing the expansion
+        timeout:   amount of time to wait before canceling the operation.
+        
+        returns a tuple of the unrecognized characters and list of messages generated during the draw request.
+        """
         
         unrecognized = set()
         messages = []
@@ -88,8 +106,20 @@ class DrawingSystem(object):
         return dict(unrecognized = unrecognized,
                     messages     = messages)
             
-#basis for drawing system (simple turtle graphics position manipulator)
+
 class TurtlePT(object):
+    """Turtle graphics object that can be moved, turned left and right and moved forward.  This is the basis of an LSystem drawing so this
+    object is provided for use with various drawing systems.
+    
+    public parameters:
+    x: current x coordinate (dimensionless)
+    y: current y coordinate (dimensionless)
+    angle: current angle of rotation in degrees.
+    
+    x: starting x coordinate
+    y: starting y coordinate
+    """
+    
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -98,16 +128,25 @@ class TurtlePT(object):
         self._stack = []
 
     def push(self):
+        """Push the current coordinate onto a stack.  They may be restored with a call to pop"""
         self._stack.append( (self.x, self.y, self.angle)  )
     def pop(self):
+        """Pop the last coordinate information off of the stack and restore it"""
         self.x, self.y, self.angle = self._stack.pop()
 
     def turn_left(self, by):
+        """Turn left by the given degrees.
+        
+        by: number of degrees to turn from the current rotation.
+        """
         self.angle = (self.angle - by) % 360
     def turn_right(self, by):
+        """Turn right by the given degrees.
+        
+        by: number of degrees to turn from the current rotation."""
         self.angle = (self.angle + by) % 360
     def forward(self, by):
-        
+        """Move forward by the given distance.  No boundaries are assumed or checked."""
                 
         #effectively translate the coordinate system origin to the reference point by only using
         #the 'by' as the polar radius.  This creates offsets that we apply to the original points.
@@ -118,6 +157,24 @@ class TurtlePT(object):
         self.y += by * math.sin(c_angle)
         
 class DrawImage(DrawingSystem):
+    """Implementation of DrawingSystem that uses PIL.  
+    
+    Each method called in response to an item appends a command to a list instead of drawing to the image.  Also, coordinate boundaries are calculated.
+    This happens for several reasons:
+      1)  We are unable to calculate the boundary of an lsystem until after we finish the expansion.
+      2)  PIL does not like having things drawn outside of any defined boundaries. 
+    Therefore, we cannot instantiate the PIL image until we know the entire expansion.
+    
+    Once we reach the end of the expansion, the commands are processed and turned into a PIL image regardless of any expected errors (unhandled exceptions
+    cause total failure).  Negative coordinates are normalized such that (0,0) is the lowest value coordinate.  
+    
+    This allows us to have arbitrarily sized lsystems without having to worry about where they will go before we calculate them.
+    
+    See DrawingSystem for an explanation of constructor arguments.
+    color_map: dictionary object that maps single letter color codes to PIL color strings/
+    """
+    
+    
     def __init__(self, draw, forward, left, right, color_escape, color_map):
         DrawingSystem.__init__(self, draw, forward, left, right, color_escape)
         self._im = None
