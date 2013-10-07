@@ -39,12 +39,12 @@
 						      <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ item }}<b class="caret"></b></a>
 							  <ul class="dropdown-menu">
 							  {% for subitem, address in value %}
-								<li><a href="{{address}}">{{ subitem }}</a></li>
+								<li><a href="{{url_for(address)}}">{{ subitem }}</a></li>
 							  {% endfor %}
 							  </ul>
 							 </li>
 					{% else %}
-						<li><a href="{{value}}">{{item}}</a></li>
+						<li><a href="{{url_for(value)}}">{{item}}</a></li>
 					{% endif %}
 	    		{% endfor %}
 				</ul>
