@@ -5,7 +5,6 @@ Drawing library that will operation on an  LSystem expansion and return a repres
 
 @author: david
 '''
-import itertools
 import math
 import time
 
@@ -14,14 +13,18 @@ import Image, ImageDraw
 class DrawingSystemException(Exception): pass
 
 class DrawingSystem(object):
-    """Abstract class that implements the Template pattern.  This class handles the basic logic behind drawing an LSystem and
-     allows the subclasses to implement the actual drawing code.
+    """
+     Overview: Abstract class that implements the Template pattern.  This class handles the basic logic behind drawing an LSystem and
+               allows the subclasses to implement the actual drawing code.
      
-     draw: string containing each character to be recognized as a command to move forward and draw.
-     forward: string containing each character to be recognized as a command to move forward but NOT draw.
-     left: string containing each character to be recognized as a command to turn left.     
-     right: string containing each character to be recognized as a command to turn right.  
-     color_escape: string containing each character to be recognized as a color escape command.  
+               See the draw method for a description of when each method is called.
+     
+     Parameters:
+         draw: string containing each character to be recognized as a command to move forward and draw.
+         forward: string containing each character to be recognized as a command to move forward but NOT draw.
+         left: string containing each character to be recognized as a command to turn left.     
+         right: string containing each character to be recognized as a command to turn right.  
+         color_escape: string containing each character to be recognized as a color escape command.  
      
     """
     def __init__(self, draw, forward, left, right, color_escape):
@@ -60,12 +63,14 @@ class DrawingSystem(object):
         raise NotImplementedError("To Be Implemented in Subclass")
         
     def draw(self, expansion, timeout=None):
-        """draws the LSystem expansion according to the rules of the concrete class.
+        """
+        Overview: draws the LSystem expansion according to the rules of the concrete class.
         
-        expansion: string or string-yielding generator representing the expansion
-        timeout:   amount of time to wait before canceling the operation.
+        Parameters:
+            expansion: string or string-yielding generator representing the expansion
+            timeout:   amount of time to wait before canceling the operation.
         
-        returns a tuple of the unrecognized characters and list of messages generated during the draw request.
+        Returns: a tuple of the unrecognized characters and list of messages generated during the draw request.
         """
         
         unrecognized = set()
@@ -108,19 +113,22 @@ class DrawingSystem(object):
             
 
 class TurtlePT(object):
-    """Turtle graphics object that can be moved, turned left and right and moved forward.  This is the basis of an LSystem drawing so this
-    object is provided for use with various drawing systems.
+    """
+    Overview: Turtle graphics object that can be moved, turned left and right and moved forward.  This is the basis of an LSystem drawing so this
+              object is provided for use with various drawing systems.
     
     public parameters:
     x: current x coordinate (dimensionless)
     y: current y coordinate (dimensionless)
     angle: current angle of rotation in degrees.
-    
-    x: starting x coordinate
-    y: starting y coordinate
     """
-    
+        
     def __init__(self, x, y):
+        """
+        Parameters:
+            x: starting x coordinate
+            y: starting y coordinate
+        """
         self.x = x
         self.y = y
         self.angle = 0
@@ -128,25 +136,36 @@ class TurtlePT(object):
         self._stack = []
 
     def push(self):
-        """Push the current coordinate onto a stack.  They may be restored with a call to pop"""
+        """
+        Overview: Push the current coordinate onto a stack.  They may be restored with a call to pop
+        """
         self._stack.append( (self.x, self.y, self.angle)  )
     def pop(self):
-        """Pop the last coordinate information off of the stack and restore it"""
+        """
+        Overview: Pop the last coordinate information off of the stack and restore it
+        """
         self.x, self.y, self.angle = self._stack.pop()
 
     def turn_left(self, by):
-        """Turn left by the given degrees.
+        """
+        Overview: Turn left by the given degrees.
         
-        by: number of degrees to turn from the current rotation.
+        Parameters:
+            by: number of degrees to turn from the current rotation.
         """
         self.angle = (self.angle - by) % 360
     def turn_right(self, by):
-        """Turn right by the given degrees.
+        """
+        Overview: Turn right by the given degrees.
         
-        by: number of degrees to turn from the current rotation."""
+        Parameters:
+            by: number of degrees to turn from the current rotation.
+        """
         self.angle = (self.angle + by) % 360
     def forward(self, by):
-        """Move forward by the given distance.  No boundaries are assumed or checked."""
+        """
+        Overview: Move forward by the given distance.  No boundaries are assumed or checked.
+        """
                 
         #effectively translate the coordinate system origin to the reference point by only using
         #the 'by' as the polar radius.  This creates offsets that we apply to the original points.
@@ -157,7 +176,8 @@ class TurtlePT(object):
         self.y += by * math.sin(c_angle)
         
 class DrawImage(DrawingSystem):
-    """Implementation of DrawingSystem that uses PIL.  
+    """
+    Implementation of DrawingSystem that uses PIL.  
     
     Each method called in response to an item appends a command to a list instead of drawing to the image.  Also, coordinate boundaries are calculated.
     This happens for several reasons:

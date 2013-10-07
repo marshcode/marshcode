@@ -38,7 +38,10 @@ examples = dict(empty  = dict(start='', productions='', angle=90, step=5, iterat
 
 @lsyslegacy.route('/')
 def index():
-    """Renders the main user interface and pre-populate it with the given example"""
+    """
+    Overview: Renders the main user interface and pre-populate it with the given example
+    Returns:  Main GUI HTML
+    """
     
     example = examples.get(request.args.get('example'), examples['empty'])
     return render_template('lsyslegacy/index.html', values = example)
@@ -49,7 +52,10 @@ def index():
 
 @lsyslegacy.route('/handler')
 def handler():
-    """Handles. validates and returns the image or a list of problems encountered and ways to avoid them."""
+    """
+    Overview: Handles. validates and returns the image or a list of problems encountered and ways to avoid them.
+    Returns: HTML document with base64 encoded image and server messages in a list.
+    """
 
     validated_keys, messages = handlerlib.parse_form_input(request)
     img_data = None
