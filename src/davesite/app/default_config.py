@@ -6,7 +6,7 @@ ERROR_LOG_FILE = "davesite.error.log"
 
 #Nested list with entries of the format ('Heading', 'http://www.the_url.com') or
 #('Menu Heading', [('Heading1', 'URL1'), ('Heading2', 'URL2')])
-MENU = [('a', '/b')]                               
+MENU = []                               
                                                                               
 #Script location on the server (relative to the root).  Use this to adjust the prefix created by flask.url_for
 SCRIPT_NAME='/'                            
