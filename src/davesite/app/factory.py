@@ -44,21 +44,20 @@ class URLPrefixMiddleware(object):
         environ['SCRIPT_NAME'] = self.prefix
         return self.app(environ, start_response)
 
-def handle_logging(app):
+def initialize_logging():
     """
-    Overview: Helper function that will configure logging to the console and to a file
+    Overview: Helper function that will configure logging to the console
     
     Parameters:
         app: Flask application object to enable logging on
         
         """
-    logging.basicConfig(filename = app.config['ERROR_LOG_FILE'], level = logging.DEBUG,
-                        format = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')     
-    
+
     root_logger = logging.getLogger()
-    root_logger.handlers[0].setLevel(logging.WARNING) #[0] is the file handler
-    
+    root_logger.setLevel(logging.DEBUG)
+
     stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setLevel(logging.DEBUG)
     root_logger.addHandler(stream_handler)
 
 
@@ -75,13 +74,12 @@ def handle_blueprints(app):
     app.register_blueprint(bezierblueprint.bezier, url_prefix="/bezier")
     app.register_blueprint(lsyslegblueprint.lsyslegacy, url_prefix="/lsysleg")
 
-def create_app(name='davesite', environmental_config="DAVESITE_CONFIG"):
+def create_app(name='davesite', configuration='Default'):
     """
     Overview: Factory method that is responsible for the following.  Returns the configured Flask app object.
         
             * Reading the configuration.  Two configuration vectors are provided:
                 1)  A default configuration file in the source tree provides sensible defaults
-                2)  An environmental variable that points to a valid configuration file.
                 
             * Registering the blueprints.  Any blueprints to be added to the application are be added here.     
             
@@ -98,16 +96,11 @@ def create_app(name='davesite', environmental_config="DAVESITE_CONFIG"):
     Returns: A properly configured Flask application
     """
     app = Flask(name)
-    
+    initialize_logging()
+
     try:
-        app.config.from_object('davesite.app.default_config')
-        app.config.from_envvar(environmental_config, silent=True)
-    
+        app.config.from_object('davesite.app.config.{config}'.format(config=configuration))
         handle_blueprints(app)
-        
-        if not app.debug:
-            handle_logging(app)
-    
     except Exception:
         app.logger.exception("Error while starting app:")
         sys.exit(-1)
