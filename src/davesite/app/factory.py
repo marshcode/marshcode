@@ -44,6 +44,8 @@ class URLPrefixMiddleware(object):
         environ['SCRIPT_NAME'] = self.prefix
         return self.app(environ, start_response)
 
+
+logging_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
 def initialize_logging():
     """
     Overview: Helper function that will configure logging to the console
@@ -58,10 +60,18 @@ def initialize_logging():
 
     stream_handler = logging.StreamHandler(sys.stdout)
     stream_handler.setLevel(logging.DEBUG)
+    stream_handler.setFormatter(logging_formatter)
     root_logger.addHandler(stream_handler)
 
+def add_file_logging(file_name, level):
+    file_handler = logging.FileHandler(file_name)
+    file_handler.setLevel(level)
+    file_handler.setFormatter(logging_formatter)
 
-def handle_blueprints(app):
+    root_logger = logging.getLogger()
+    root_logger.addHandler(file_handler)
+
+def initialize_blueprints(app):
     """
     Overview:Helper function to register all necessary blueprints on the given app object
     
@@ -100,10 +110,12 @@ def create_app(name='davesite', configuration='Default'):
 
     try:
         app.config.from_object('davesite.app.config.{config}'.format(config=configuration))
-        handle_blueprints(app)
+        initialize_blueprints(app)
     except Exception:
         app.logger.exception("Error while starting app:")
         sys.exit(-1)
-    
+
+    add_file_logging(app.config.get('ERROR_LOG_FILE', 'error.log'), logging.WARN)
+
     app.wsgi_app = URLPrefixMiddleware(app.wsgi_app, app.config.get('SCRIPT_NAME', '/'))
     return app
