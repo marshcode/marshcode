@@ -8,7 +8,7 @@
 
 		<!-- Standard CSS includes -->
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
-		
+
 
 		<!-- Template headers-->
 		{% block head %}
@@ -26,6 +26,9 @@
 	<body>
 		<div class="header">
 			<h1><a href="/">MarshCode</a></h1>
+            {% if headerLink %}
+				<a href="{{ headerLink.url }}">{{ headerLink.text }}</a>
+            {% endif %} 
 			<hr />
 		</div>
 	

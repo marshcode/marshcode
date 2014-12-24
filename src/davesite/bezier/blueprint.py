@@ -9,11 +9,10 @@ Most of the work is done in templates/bezier/index.html.  Future work will see s
 '''
 
 from flask import Blueprint, render_template
+from davesite.app.common import inject_header_link
 
-
-bezier = Blueprint('bezier', __name__,
-                        template_folder='templates',
-                        static_folder = 'static')
+bezier = Blueprint('bezier', __name__,  template_folder='templates', static_folder='static')
+inject_header_link(bezier)
 
 
 @bezier.route('/')

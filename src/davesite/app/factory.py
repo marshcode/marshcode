@@ -45,7 +45,7 @@ class URLPrefixMiddleware(object):
         return self.app(environ, start_response)
 
 
-logging_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+logging_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(name)s %(message)s [in %(filename)s:%(lineno)d]')
 def initialize_logging():
     """
     Overview: Helper function that will configure logging to the console
