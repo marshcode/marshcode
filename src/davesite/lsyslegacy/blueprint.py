@@ -15,6 +15,7 @@ from the client dynamically.
 import base64
 
 import davesite.lsyslegacy.handlerlib as handlerlib
+from davesite.app.common import inject_header_link
 
 from flask import Blueprint, render_template, request
 
@@ -22,6 +23,8 @@ from flask import Blueprint, render_template, request
 lsyslegacy = Blueprint('lsyslegacy', __name__,
                         template_folder='templates',
                         static_folder = 'static')
+inject_header_link(lsyslegacy)
+
 
 ######################
 #Index
