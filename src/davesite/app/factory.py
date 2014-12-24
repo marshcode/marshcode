@@ -88,20 +88,16 @@ def create_app(name='davesite', configuration='Default'):
     """
     Overview: Factory method that is responsible for the following.  Returns the configured Flask app object.
         
-            * Reading the configuration.  Two configuration vectors are provided:
-                1)  A default configuration file in the source tree provides sensible defaults
+            * Reading the configuration.  The configuration is kept in config.py
                 
             * Registering the blueprints.  Any blueprints to be added to the application are be added here.     
             
             * Logging: DaveSite uses the built-in python logging module to provide console and file logging.
                        All errors are logged to the console while only warnings and above are logged to the file.
-                       
-            * Menu:  The menu structure seen in the header bar is defined in the configuration file.  The structure and any helper functions are setup and injected 
-                     into the templating engine here.
     
     Parameters:
         name:                  package that davesite currently resides under.  
-        environmental_config:  environmental variable that points to a valid configuration file.
+        configuration:         string that points to one of the classes in config.py
         
     Returns: A properly configured Flask application
     """

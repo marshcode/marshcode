@@ -17,4 +17,6 @@ class Default(object):
 class MarshCode(Default):
     SCRIPT_NAME = '/projects'
 
-    HEADER_LINKS = dict(bezier=HeaderLink('Project Writeup', '/?page_id=117'))
+    HEADER_LINKS = dict(bezier=HeaderLink('Bezier Visualizer WriteUp', '/?page_id=117'),
+                        jlp=HeaderLink('JLP Advisor WriteUp', '/?page_id=115'),
+                        lsyslegacy=HeaderLink('Legacy LSystem WriteUp', '/?page_id=119'))
