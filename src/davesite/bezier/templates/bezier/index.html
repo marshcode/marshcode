@@ -5,11 +5,41 @@
 
 {% block head %}
 	<link rel=stylesheet type=text/css href="{{ url_for('bezier.static', filename='js/handsontable/jquery.handsontable.full.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('bezier.static', filename='js/jquery/jquery-ui.css') }}">
 
-	<style type="text/css">
+	<style>
+		body {
+			color: #000;
+			font-family:Monospace;
+			font-size:13px;
+
+			background-color: #fff;
+			margin: 0px;
+			overflow: hidden;
+		}
+
 		canvas{
 			border:solid thin black;
 		}
+
+		#grid_container{
+			margin-right:25%;
+			min-width:300px;
+			float:right;
+			overflow:hidden;
+		}
+
+		#viz_container{
+			width:800px;
+			position:relative;
+			margin:20px 0 0 20px;
+		}
+
+		#dat_container{
+			position:absolute;
+			right:0px;
+		}
+
 	</style>
 	
 {% endblock head %}
@@ -17,12 +47,11 @@
 {% block body %}
 
 		<div class="row">	
-			<div class="span5 offset1" id="viz_container" style="width:{{viz3d_width}}px;position:relative;">
-				<span id="dat_container" style="position:absolute;right:0px;"></span>
+			<div class="span5 offset1" id="viz_container">
+				<span id="dat_container"></span>
 			</div>
 
-			<div id="grid_container" class="span3 offset1" style="overflow:hidden;">
-				<input id="grid_append" type="button" value="Append Row" />
+			<div id="grid_container" class="span3 offset1">
 			</div>
 		</div>
 
@@ -44,18 +73,16 @@
 		Jquery already being included up above below
 		<script src="{{ url_for('bezier.static', filename='js/jquery/jquery.js') }}"></script> 
 		-->
-		
+		<script src="{{ url_for('bezier.static', filename='js/jquery/jquery-ui.js') }}"></script>
+
 		<script src="{{ url_for('bezier.static', filename='js/underscore/underscore-min.js') }}"></script>
 		<script src="{{ url_for('bezier.static', filename='js/backbone/backbone-min.js') }}"></script>
 		 			  
 		<script src="{{ url_for('bezier.static', filename='js/handsontable/jquery.handsontable.full.js') }}"></script>
 		
 		<!-- This should be minified and combined into one file -->
-		<script src="{{ url_for('bezier.static', filename='js/bezier/core/bezier.js') }}"></script>	
-		<script src="{{ url_for('bezier.static', filename='js/bezier/core/storage.js') }}"></script>	
-		<script src="{{ url_for('bezier.static', filename='js/bezier/widgets/grids.js') }}"></script>
-		<script src="{{ url_for('bezier.static', filename='js/bezier/widgets/visualizers.js') }}"></script>
-		<script src="{{ url_for('bezier.static', filename='js/bezier/parsers/single.js') }}"></script>
+		<script src="{{ url_for('bezier.static', filename='js/bezier/bezierviz-min.js') }}"></script>
+
  		
 		<script type="text/javascript">
 			////////////////////////
@@ -75,29 +102,16 @@
 			load_curves(curve_list_url, [init_dat, 
 										 function(curve_list){
 											var key = Object.keys(curve_list)[0]
-											load_curve(curve_list[key]); //not sure if this will hold up.  Does dat sort the keys before adding them?
+											load_curve(curve_list[key], key); //not sure if this will hold up.  Does dat sort the keys before adding them?
 										  },
 										  init_grid,//curve must be loaded first.
 
 			]);
 			//GRID VISUALIZER
 			function init_grid(){
-				var cpg = BEZIER.widgets.control_point_grid(storage, curve_name)
 				var container = $("#grid_container");
-				var append_button = $("#grid_append");
-				
-				container.prepend(cpg.dom_element);
-				
-				//This will be handled by another grid object in beta3.  It will be some sort collection object that handles adding and removing
-				//each grid only handles editing.
-				storage.on(storage.EVENT_ADDED, function () {					
-					cpg.update();
-				});
-				
-				append_button.click( function(){
-					var count = cpg.dom_element.handsontable('countRows');
-					cpg.dom_element.handsontable('alter', 'insert_row', count);
-				});
+				var cpg_controller = BEZIER.widgets.cpg_controller(storage);
+				container.append(cpg_controller.dom_element);
 			}
 
 			
@@ -114,98 +128,119 @@
 			//GUI and controllers
 			//////////////////
 			function init_dat(item_list){
-				controller = {};
-				
-				controller.clear_curve = function (){
-									clear_curve(curve_name);		
-								 }
-				controller.refresh_curve = function (){
-					gui.destroy();
-					$(gui.domElement).remove();
-					load_curves(curve_list_url, [init_dat]);
-				}
-
-				controller.auto_frame = function (){
-					auto_frame();
-				}
-
-				controller.curve_list = "";				
-
-				controller.points_visible = true;
-				controller.control_polygon_visible = true;
-				controller.curve_visible = true;
-
-				controller.size = 0.25;
-
-				var dat_container = $("#dat_container")
 				var gui = new dat.GUI({ autoPlace: false });
-				
+
+				var reverse_item_list = {};
+				for(var key in item_list){
+					reverse_item_list[item_list[key]] = key
+				}
+
+				//DAT doesn't provide functionality for this
+				var removeFolder = function(folder_name){
+					var folder = gui.__folders[folder_name];
+
+					folder.close();
+					folder.domElement.parentNode.parentNode.removeChild(folder.domElement.parentNode);
+
+					gui.__folders[folder_name] = undefined;
+					gui.onResize();
+				};
+
+
 				/////////////////////////
 				//LOAD CURVES
 				/////////////////////////
+				var load_controller = {};
+				load_controller.curve_list = "";
+				load_controller.refresh_curve = function (){
+
+					//remove all callbacks that we added
+					storage.off(storage.EVENT_ADDED, null, gui);
+					storage.off(storage.EVENT_CLEARED, null, gui);
+
+					gui.destroy();
+					$(gui.domElement).remove();
+					load_curves(curve_list_url, [init_dat]);
+				};
+
 				var load_curve_folder = gui.addFolder('Load Curves');
-				
-				var curve_list = load_curve_folder.add(controller, 'curve_list', item_list ).name("Curve List");
-				var refresh_curve = load_curve_folder.add(controller, 'refresh_curve').name("Refresh");
-				
-				/////////////////////////
-				//EDIT CURVES
-				/////////////////////////
-				var edit_curve_folder = gui.addFolder('Edit Curves');
-				edit_curve_folder.add(controller, 'clear_curve').name("Clear Curve");
-	
-				/////////////////////////
-				//VIEW CURVES
-				/////////////////////////
-				var view_curve_folder = gui.addFolder('View');
-				view_curve_folder.add(controller, 'auto_frame').name("Auto Frame");
-				
-				var size_handle = view_curve_folder.add(controller, 'size', 0, 5).name('Size');
-				size_handle.onChange(function(curve_size){
-					viz3D.set_curve_size(curve_name, curve_size);
-					storage.updated(curve_name);
+				var curve_list = load_curve_folder.add(load_controller, 'curve_list', item_list ).name("Curve List");
+				curve_list.onChange(function(curve_url){
+					if(curve_url){
+						var curve_name = reverse_item_list[curve_url];
+						load_curve(load_controller.curve_list, curve_name);
+					}
+
 				});
-				
-				var point_handle = view_curve_folder.add(controller, 'points_visible').name("Points Visible");
-				var polygon_handle = view_curve_folder.add(controller, 'control_polygon_visible').name("Polygon Visible");
-				var curve_handle = view_curve_folder.add(controller, 'curve_visible').name("Curve Visible");
-				
-				point_handle.onChange( function(point_visibility){
-					viz3D.set_points_visibility(curve_name, point_visibility);
-					viz3D.update();
-				});
-				polygon_handle.onChange( function(polygon_visibility){
-					viz3D.set_polygon_visibility(curve_name, polygon_visibility);
-					viz3D.update();
-				});				
-				curve_handle.onChange( function(curve_visible){
-					viz3D.set_curve_visibility(curve_name, curve_visible);
-					viz3D.update();
-				});				
-				
-				
+				var refresh_curve = load_curve_folder.add(load_controller, 'refresh_curve').name("Refresh");
+
 				///////////////////
-				//LOAD CURVE 2: callbacks
+				//Edit Curves.  Each time we add a curve, add a gui folder.  Each time we remove one, remove the folder
 				///////////////////
-				curve_list.onChange( function(e){				
-					load_curve(controller.curve_list)
+				storage.on(storage.EVENT_CLEARED, function(curve_name){
+					removeFolder(curve_name)
+				},gui);
+
+				storage.on(storage.EVENT_ADDED, function(curve_name){
+					var curve_folder = gui.addFolder(curve_name);
+					var curve_controller = {};
+
 					var options = viz3D.get_options("default");
-					point_handle.setValue(options.points_visible);
-					polygon_handle.setValue(options.polygon_visible);
-					curve_handle.setValue(options.curve_visible);
-					size_handle.setValue(options.size);
-					
-				});
-				
-				
+					curve_controller.points_visible = options.points_visible;
+					curve_controller.control_polygon_visible = options.polygon_visible;
+					curve_controller.curve_visible = options.curve_visible;
+					curve_controller.size = options.size;
+
+					curve_controller.auto_frame = function (){
+						auto_frame(curve_name);
+					};
+
+					curve_controller.clear_curve = function (){
+						clear_curve(curve_name);
+					 };
+
+					//TODO: make it frame out this specific curve
+					curve_folder.add(curve_controller, 'auto_frame').name("Auto Frame");
+					curve_folder.add(curve_controller, 'clear_curve').name("Clear Curve");
+
+					var size_handle = curve_folder.add(curve_controller, 'size', 0, 1).name('Size');
+					size_handle.onChange(function(curve_size){
+						viz3D.set_curve_size(curve_name, curve_size);
+						storage.updated(curve_name);
+					});
+
+					var point_handle = curve_folder.add(curve_controller, 'points_visible').name("Points Visible");
+					var polygon_handle = curve_folder.add(curve_controller, 'control_polygon_visible').name("Polygon Visible");
+					var curve_handle = curve_folder.add(curve_controller, 'curve_visible').name("Curve Visible");
+
+					point_handle.onChange(function(point_visibility){
+						viz3D.set_points_visibility(curve_name, point_visibility);
+						viz3D.update();
+					});
+
+					polygon_handle.onChange(function(polygon_visibility){
+						viz3D.set_polygon_visibility(curve_name, polygon_visibility);
+						viz3D.update();
+					});
+					curve_handle.onChange(function(curve_visible){
+						viz3D.set_curve_visibility(curve_name, curve_visible);
+						viz3D.update();
+					});
+
+					curve_controller.auto_frame();
+
+				}, gui);
+
+				var dat_container = $("#dat_container");
 				dat_container.append(gui.domElement);
-			
-			
-			}			
+
+
+			}
+
 			//////////////////////
 			//Curve Ajax
 			//////////////////////
-			function load_curve(url){
+			function load_curve(url, curve_name){
 				$.ajax({url: url, cache: false}).done(function ( data ) {
 					var curve = BEZIER.parsers.single(data);
 					storage.clear_curve(curve_name);
@@ -242,9 +277,15 @@
 			
 			 }
 		
-			 function auto_frame() {
-			 	var curve_names = storage.get_curve_names();
-				var centers = [];
+			 function auto_frame(curve_name) {
+
+                 if(storage.has_curve(curve_name)) {
+					var curve_names = [curve_name];
+				}
+				else{
+					var curve_names = storage.get_curve_names();
+				}
+                 
 				var lookx = 0, looky = 0, lookz = 0;
 				var maxx = null, maxy = null, maxz = null;
 				var minx = null, miny = null, minz = null;
