@@ -23,16 +23,18 @@
 		}
 
 		#grid_container{
-			margin-right:25%;
 			min-width:300px;
-			float:right;
+			float:left;
 			overflow:hidden;
+            margin:20px 0 0 50px;
 		}
 
 		#viz_container{
-			width:800px;
-			position:relative;
-			margin:20px 0 0 20px;
+			width: 800px;
+			position: relative;
+			margin: 20px 0 0 20px;
+			display: inline-block;
+			float: left;
 		}
 
 		#dat_container{
@@ -45,16 +47,14 @@
 {% endblock head %}
 
 {% block body %}
-
-		<div class="row">	
-			<div class="span5 offset1" id="viz_container">
-				<span id="dat_container"></span>
-			</div>
-
-			<div id="grid_container" class="span3 offset1">
-			</div>
+    <div class="wrap">
+		<div class="span5 offset1" id="viz_container">
+			<span id="dat_container"></span>
 		</div>
 
+		<div id="grid_container" class="span3 offset1">
+		</div>
+    </div>
 {% endblock body %}
 {% block body_scripts %}
 		
@@ -285,7 +285,7 @@
 				else{
 					var curve_names = storage.get_curve_names();
 				}
-                 
+
 				var lookx = 0, looky = 0, lookz = 0;
 				var maxx = null, maxy = null, maxz = null;
 				var minx = null, miny = null, minz = null;

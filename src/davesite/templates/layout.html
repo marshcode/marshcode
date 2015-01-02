@@ -15,16 +15,24 @@
 		{% endblock head %}
 
 		<style type="text/css">
+            html,body{
+                overflow: visible;
+            }
 			body{
 				padding:0 1em;
 			}
+
+            .clear {
+                clear:both;
+            }
+
 		</style>
 
 	
 
 	</head>
 	<body>
-		<div class="header">
+		<div class="header clear">
 			<h1><a href="/">MarshCode</a></h1>
             {% if headerLink %}
 				<a href="{{ headerLink.url }}">{{ headerLink.text }}</a>
@@ -39,7 +47,7 @@
 		</div>
 	
 	
-		<div class="footer">
+		<div class="footer clear">
 			<hr />
 			<span class="content">&copy; David Marsh 2013</span>
 		</div>	
